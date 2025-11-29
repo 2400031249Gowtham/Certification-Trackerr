@@ -15,10 +15,12 @@ export default function AdminUsers() {
 
   const { data: users = [], isLoading: usersLoading } = useQuery<User[]>({
     queryKey: ["/api/users"],
+    queryFn: async () => (await import("@/lib/localAuth")).getAllUsers(),
   });
 
   const { data: certifications = [], isLoading: certsLoading } = useQuery<Certification[]>({
     queryKey: ["/api/certifications"],
+    queryFn: async () => (await import("@/lib/localData")).getAllCertifications(),
   });
 
   const isLoading = usersLoading || certsLoading;

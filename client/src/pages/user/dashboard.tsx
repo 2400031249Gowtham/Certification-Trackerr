@@ -22,6 +22,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { getCertificationsByUser, createCertification } from "@/lib/localData";
 import type { Certification } from "@shared/schema";
 
 export default function UserDashboard() {
@@ -31,23 +32,18 @@ export default function UserDashboard() {
 
   const { data: certifications = [], isLoading } = useQuery<Certification[]>({
     queryKey: ["/api/certifications", "user", user?.id],
-    queryFn: async () => {
-      const res = await fetch(`/api/certifications?userId=${user?.id}`);
-      if (!res.ok) throw new Error("Failed to fetch");
-      return res.json();
-    },
+    queryFn: async () => getCertificationsByUser(user?.id),
     enabled: !!user?.id,
   });
 
   const createMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await apiRequest("POST", "/api/certifications", {
+      return createCertification({
         ...data,
         userId: user?.id,
         issueDate: format(data.issueDate, "yyyy-MM-dd"),
         expirationDate: format(data.expirationDate, "yyyy-MM-dd"),
       });
-      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/certifications", "user", user?.id] });

@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { getAllCertifications } from "@/lib/localData";
+import { getAllUsers } from "@/lib/localAuth";
 import { format, differenceInDays, parseISO } from "date-fns";
 import {
   Award,
@@ -20,10 +22,12 @@ import type { Certification, User } from "@shared/schema";
 export default function AdminDashboard() {
   const { data: certifications = [], isLoading: certsLoading } = useQuery<Certification[]>({
     queryKey: ["/api/certifications"],
+    queryFn: async () => getAllCertifications(),
   });
 
   const { data: users = [], isLoading: usersLoading } = useQuery<User[]>({
     queryKey: ["/api/users"],
+    queryFn: async () => getAllUsers(),
   });
 
   const isLoading = certsLoading || usersLoading;

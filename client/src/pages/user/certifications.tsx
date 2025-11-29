@@ -19,6 +19,7 @@ import { EmptyState } from "@/components/empty-state";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { getCertificationsByUser, createCertification, updateCertification, deleteCertification } from "@/lib/localData";
 import type { Certification } from "@shared/schema";
 
 type StatusFilter = "all" | "active" | "expiring" | "expired";
@@ -37,22 +38,19 @@ export default function UserCertifications() {
   const { data: certifications = [], isLoading } = useQuery<Certification[]>({
     queryKey: ["/api/certifications", "user", user?.id],
     queryFn: async () => {
-      const res = await fetch(`/api/certifications?userId=${user?.id}`);
-      if (!res.ok) throw new Error("Failed to fetch");
-      return res.json();
+      return getCertificationsByUser(user?.id);
     },
     enabled: !!user?.id,
   });
 
   const createMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await apiRequest("POST", "/api/certifications", {
+      return createCertification({
         ...data,
         userId: user?.id,
         issueDate: format(data.issueDate, "yyyy-MM-dd"),
         expirationDate: format(data.expirationDate, "yyyy-MM-dd"),
       });
-      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/certifications", "user", user?.id] });
@@ -73,12 +71,11 @@ export default function UserCertifications() {
 
   const updateMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await apiRequest("PATCH", `/api/certifications/${editingCert?.id}`, {
+      return updateCertification(editingCert!.id, {
         ...data,
         issueDate: format(data.issueDate, "yyyy-MM-dd"),
         expirationDate: format(data.expirationDate, "yyyy-MM-dd"),
       });
-      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/certifications", "user", user?.id] });
@@ -99,7 +96,7 @@ export default function UserCertifications() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await apiRequest("DELETE", `/api/certifications/${id}`);
+      await deleteCertification(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/certifications", "user", user?.id] });

@@ -19,6 +19,7 @@ import { CertificationForm } from "@/components/certification-form";
 import { useAuth } from "@/lib/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { getCertificationsByUser, updateCertification } from "@/lib/localData";
 import type { Certification } from "@shared/schema";
 
 export default function UserRenewals() {
@@ -28,22 +29,17 @@ export default function UserRenewals() {
 
   const { data: certifications = [], isLoading } = useQuery<Certification[]>({
     queryKey: ["/api/certifications", "user", user?.id],
-    queryFn: async () => {
-      const res = await fetch(`/api/certifications?userId=${user?.id}`);
-      if (!res.ok) throw new Error("Failed to fetch");
-      return res.json();
-    },
+    queryFn: async () => getCertificationsByUser(user?.id),
     enabled: !!user?.id,
   });
 
   const updateMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await apiRequest("PATCH", `/api/certifications/${editingCert?.id}`, {
+      return updateCertification(editingCert!.id, {
         ...data,
         issueDate: format(data.issueDate, "yyyy-MM-dd"),
         expirationDate: format(data.expirationDate, "yyyy-MM-dd"),
       });
-      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/certifications", "user", user?.id] });

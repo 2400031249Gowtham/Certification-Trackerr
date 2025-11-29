@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth-context";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { apiRequest } from "@/lib/queryClient";
+import { registerLocal, loginLocal } from "@/lib/localAuth";
 import type { User } from "@shared/schema";
 
 const loginSchema = z.object({
@@ -65,8 +66,8 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormValues) => {
-      const res = await apiRequest("POST", "/api/auth/login", data);
-      return res.json() as Promise<User>;
+      // Use local storage based auth for development (no backend)
+      return loginLocal(data as { username: string; password: string });
     },
     onSuccess: (user) => {
       login(user);
@@ -91,8 +92,8 @@ export default function Login() {
 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterFormValues) => {
-      const res = await apiRequest("POST", "/api/auth/register", data);
-      return res.json() as Promise<User>;
+      // Use local storage based registration for development (no backend)
+      return registerLocal(data as { username: string; password: string; fullName: string; email: string });
     },
     onSuccess: (user) => {
       login(user);
