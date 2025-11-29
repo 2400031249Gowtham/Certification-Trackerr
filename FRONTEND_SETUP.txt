@@ -1,0 +1,53 @@
+======================================
+CERTTRACK - FRONTEND ONLY PROJECT
+======================================
+
+📂 This is a FRONTEND-ONLY project
+✅ No backend included
+✅ All React UI components ready to use
+
+QUICK START - Just 2 Commands:
+==============================
+
+Step 1: npm install
+
+Step 2: npm run dev
+
+That's it! ✅
+
+App opens at: http://localhost:5000
+
+LOGIN DEMO:
+- Admin: admin / admin123
+- User: john / user123
+
+======================================
+FOLDER CONTENTS:
+✅ client/           → React UI code
+✅ package.json      → Dependencies
+✅ Config files      → vite, tailwind, typescript, etc.
+✅ Design system     → Professional styling
+
+FEATURES INCLUDED:
+✅ React 18 + TypeScript
+✅ Admin Dashboard UI
+✅ User Dashboard UI
+✅ Certification Forms
+✅ Certification Cards & Tables
+✅ Search & Filter UI
+✅ Dark Mode Toggle
+✅ Responsive Design
+✅ Mock API Integration Ready
+✅ Form Validation
+✅ Navigation Sidebar
+✅ Professional Styling (Linear/Notion inspired)
+
+WHAT YOU GET:
+✅ Production-ready UI
+✅ All components with proper styling
+✅ Fully responsive
+✅ Dark mode support
+✅ No backend required
+✅ Ready to integrate with your own backend
+
+HACKATHON READY! 🚀
